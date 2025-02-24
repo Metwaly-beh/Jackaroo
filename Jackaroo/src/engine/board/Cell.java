@@ -1,9 +1,9 @@
 package engine.board;
 
 public class Cell {
-	Marble marble;
-	CellType cellType;
-	boolean trap;
+	private Marble marble;
+	private CellType cellType;
+	private boolean trap;
 	
 	
 	
