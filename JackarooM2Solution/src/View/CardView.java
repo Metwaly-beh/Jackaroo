@@ -3,6 +3,7 @@ package View;
 import controller.Controller;
 import engine.Game;
 import exception.InvalidCardException;
+import javafx.application.Platform;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.ImageView;
 import model.card.Card;
@@ -31,7 +32,7 @@ public class CardView {
                 Glow glow = new Glow(0.7);
                 view.setEffect(glow);
             } catch (InvalidCardException ex) {
-                Controller.displayAlert("Invalid Card", ex.getMessage());
+                Platform.runLater(() -> Controller.displayAlert("Invalid Card", ex.getMessage()));
             }
         });
     }

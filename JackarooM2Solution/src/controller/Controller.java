@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 
 import View.CardView;
 import model.Colour;
@@ -35,11 +34,13 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 
 public class Controller {
 	private Game game;
@@ -94,16 +95,17 @@ public class Controller {
     @FXML private VBox CPU3Area,CPU2Area,CPU1Area,PlayerArea;
     @FXML private Label CPU3Label,CPU2Label,CPU1Label,PlayerName;
     @FXML private ImageView PlayerImg,CPU1Img,CPU2Img,CPU3Img;
-    @FXML private Button Button1;
     @FXML private Label cur,next;
     
     private Card selectedCard;
     public void initialize() throws IOException, InvalidCardException {
-    	Scanner scanner = new Scanner(System.in);
-    	String name = scanner.nextLine();
-    	scanner.close();
+    	// Get player name from a dialog instead of blocking console input
+    	String name = showNameInputDialog();
+    	if (name == null || name.trim().isEmpty()) {
+    		name = "Player";
+    	}
     	game = new Game(name);
-    	gameManager = new Game(name);
+    	gameManager = game; // Game already implements GameManager
 
     	
     	ArrayList<Colour> colourOrder = new ArrayList<>();
@@ -157,7 +159,6 @@ public class Controller {
     		if (currentlySelectedCardView != null) currentlySelectedCardView.setEffect(null);
     		currentlySelectedCardView = bottomCard4;
     	});
-    	Button1=new Button();
 
     	setTrack();
     	setHome();
@@ -231,25 +232,20 @@ public class Controller {
         game.deselectAll();
         resetMarbleHighlights();
     }
-    @FXML
-    private ImageView firepitCard; // Linked to FXML
     
     @FXML
-    public void handlePlayCard(ActionEvent event)throws GameException{
-    	
+    public void handlePlayCard(ActionEvent event) throws GameException {
         game.playPlayerTurn();
+        updateAfterTurn();
     }
     @FXML
     private void handleFieldMarble(ActionEvent event) throws IllegalDestroyException {
-    	
-    	
-    	try {
-    	    game.fieldMarble();
-    	    updateBoard();
-    	    
-    	} catch (CannotFieldException e) {
-    	    displayAlert("Field error",e.getMessage());
-    	}
+        try {
+            game.fieldMarble();
+            updateAfterTurn();
+        } catch (CannotFieldException e) {
+            displayAlert("Field error", e.getMessage());
+        }
     }
     private void updateFirePitDisplay() {
         List<Card> firePit = game.getFirePit();
@@ -259,10 +255,30 @@ public class Controller {
             Image cardImage = helper(topCard);
             
             if (cardImage != null) {
-                firepitCard.setImage(cardImage);
+                firePitCard.setImage(cardImage);
             } 
         } else {
-            firepitCard.setImage(null); // Clear if fire pit is empty
+            firePitCard.setImage(null); // Clear if fire pit is empty
+        }
+    }
+    
+    private void updateAfterTurn() {
+        // Update board state
+        updateBoard();
+        updateFirePitDisplay();
+        updatePlayerHands();
+        updateTurnLabels();
+        
+        // Check for win condition
+        Colour winner = game.checkWin();
+        if (winner != null) {
+            handleGameOver(winner);
+            return;
+        }
+        
+        // If it's not human's turn, play CPU turns automatically
+        if (!isHumanPlayerTurn()) {
+            playCpuTurns();
         }
     }
     
@@ -643,22 +659,25 @@ public class Controller {
     }
 
     public static void displayAlert(String title, String message) {
-        Stage alertStage = new Stage();
-        alertStage.setTitle(title);
-        alertStage.setMinWidth(300);
+        Platform.runLater(() -> {
+            Stage alertStage = new Stage();
+            alertStage.setTitle(title);
+            alertStage.setMinWidth(300);
+            alertStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
 
-        Label label = new Label(message);
-        label.setWrapText(true);
-        Button closeButton = new Button("OK");
-        closeButton.setOnAction(event -> alertStage.close());
+            Label label = new Label(message);
+            label.setWrapText(true);
+            Button closeButton = new Button("OK");
+            closeButton.setOnAction(event -> alertStage.close());
 
-        VBox layout = new VBox(10);
-        layout.getChildren().addAll(label, closeButton);
-        layout.setAlignment(Pos.CENTER);
+            VBox layout = new VBox(10);
+            layout.getChildren().addAll(label, closeButton);
+            layout.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(layout, 400, 150);
-        alertStage.setScene(scene);
-        alertStage.showAndWait();
+            Scene scene = new Scene(layout, 400, 150);
+            alertStage.setScene(scene);
+            alertStage.showAndWait();
+        });
     }
     
     private void handleKeyPress(KeyEvent event) throws CannotFieldException, IllegalDestroyException {
@@ -671,7 +690,131 @@ public class Controller {
     private boolean isHumanPlayerTurn() {
         return game.getActivePlayerColour() == game.getPlayers().get(0).getColour();
     }
+    
+    private void updatePlayerHands() {
+        // Update player's hand (bottom cards)
+        ArrayList<Card> bottomHand = game.getPlayers().get(0).getHand();
+        ImageView[] bottomCardViews = { bottomCard1, bottomCard2, bottomCard3, bottomCard4 };
+        
+        for (int i = 0; i < bottomCardViews.length; i++) {
+            if (i < bottomHand.size()) {
+                Image image = helper(bottomHand.get(i));
+                bottomCardViews[i].setImage(image);
+                
+                // Recreate CardView for the new card
+                final int index = i;
+                new CardView(bottomCardViews[i], bottomHand.get(i), game, () -> {
+                    if (currentlySelectedCardView != null) currentlySelectedCardView.setEffect(null);
+                    currentlySelectedCardView = bottomCardViews[index];
+                });
+            } else {
+                bottomCardViews[i].setImage(null);
+            }
+        }
+        
+        // Update CPU card backs (they always show back)
+        Image imageBack = new Image(getClass().getResourceAsStream("/PlayingCards/card-back1.png"));
+        ImageView[] cpuCardViews = { 
+            rightCard1, rightCard2, rightCard3, rightCard4,
+            leftCard1, leftCard2, leftCard3, leftCard4,
+            topCard1, topCard2, topCard3, topCard4
+        };
+        for (ImageView view : cpuCardViews) {
+            view.setImage(imageBack);
+        }
+    }
+    
+    private void updateTurnLabels() {
+        int currentPlayerIndex = game.getPlayers().indexOf(
+            game.getPlayers().stream()
+                .filter(p -> p.getColour() == game.getActivePlayerColour())
+                .findFirst()
+                .orElse(game.getPlayers().get(0))
+        );
+        Player currentPlayer = game.getPlayers().get(currentPlayerIndex);
+        Player nextPlayer = game.getPlayers().get((currentPlayerIndex + 1) % 4);
+        updatePlayerTurnLabels(currentPlayer, nextPlayer);
+    }
+    
+    private void handleGameOver(Colour winner) {
+        String winnerName = game.getPlayers().stream()
+            .filter(p -> p.getColour() == winner)
+            .findFirst()
+            .map(Player::getName)
+            .orElse(winner.toString());
+        
+        Platform.runLater(() -> {
+            displayAlert("Game Over", winnerName + " wins!");
+            // Could add a restart option here
+        });
+    }
+    
+    private void playCpuTurns() {
+        // Run CPU turns on a background thread to avoid blocking UI
+        new Thread(() -> {
+            try {
+                while (!isHumanPlayerTurn()) {
+                    // Check for win condition
+                    Colour winner = game.checkWin();
+                    if (winner != null) {
+                        Platform.runLater(() -> handleGameOver(winner));
+                        return;
+                    }
+                    
+                    // Play CPU turn
+                    int cpuPlayerIndex = game.getPlayers().indexOf(
+                        game.getPlayers().stream()
+                            .filter(p -> p.getColour() == game.getActivePlayerColour())
+                            .findFirst()
+                            .orElse(game.getPlayers().get(1))
+                    );
+                    Player cpuPlayer = game.getPlayers().get(cpuPlayerIndex);
+                    
+                    // CPU plays its turn
+                    cpuPlayer.play();
+                    game.endPlayerTurn();
+                    
+                    // Update UI on JavaFX thread
+                    Platform.runLater(() -> {
+                        updateBoard();
+                        updateFirePitDisplay();
+                        updatePlayerHands();
+                        updateTurnLabels();
+                    });
+                    
+                    // Small delay to make CPU moves visible
+                    Thread.sleep(1000);
+                }
+            } catch (GameException | InterruptedException e) {
+                Platform.runLater(() -> displayAlert("CPU Error", "CPU turn failed: " + e.getMessage()));
+                e.printStackTrace();
+            }
+        }).start();
+    }
+    
     private void testClick() {
         System.out.println("CLICKED");
+    }
+
+    private String showNameInputDialog() {
+        Stage dialogStage = new Stage();
+        dialogStage.setTitle("Enter Your Name");
+        dialogStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+
+        Label label = new Label("Enter your name:");
+        TextField textField = new TextField();
+        textField.setPromptText("Player");
+        Button okButton = new Button("OK");
+        okButton.setOnAction(e -> dialogStage.close());
+
+        VBox layout = new VBox(10, label, textField, okButton);
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(20));
+
+        Scene scene = new Scene(layout, 300, 150);
+        dialogStage.setScene(scene);
+        dialogStage.showAndWait();
+
+        return textField.getText();
     }
 }

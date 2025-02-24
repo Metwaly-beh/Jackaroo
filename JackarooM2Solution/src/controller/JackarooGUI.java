@@ -1,23 +1,23 @@
 package controller;
 
-import java.io.InputStream;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class JackarooGUI extends Application{
+public class JackarooGUI extends Application {
 	
 	public void start(Stage primaryStage) {
         try {
             // ===== Load FXML file created with Scene Builder =====
-        	System.out.println(getClass().getResource("/Main.fxml"));
-        	System.out.print(getClass().getResourceAsStream("/path/"+"red"+"ice.png"));
-        	InputStream stream = getClass().getResourceAsStream("/path/redice.png");
-        	System.out.println(stream == null ? "Resource not found" : "Resource found");
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Main.fxml"));
+            var fxmlUrl = getClass().getResource("/Main.fxml");
+            if (fxmlUrl == null) {
+                throw new IllegalStateException("Cannot find Main.fxml in classpath. Make sure resources are copied to output directory.");
+            }
+            System.out.println("Loading FXML from: " + fxmlUrl);
+            
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
             Parent root = loader.load();	
 
             // ===== Create and start the scene =====
@@ -28,14 +28,31 @@ public class JackarooGUI extends Application{
 
         } catch (Exception e) {
             e.printStackTrace();
+            showErrorDialog("Failed to start game", e.getMessage());
         }
+    }
+    
+    private void showErrorDialog(String title, String message) {
+        Stage dialog = new Stage();
+        dialog.setTitle(title);
+        dialog.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+        
+        javafx.scene.control.Label label = new javafx.scene.control.Label(message);
+        label.setWrapText(true);
+        javafx.scene.control.Button closeButton = new javafx.scene.control.Button("OK");
+        closeButton.setOnAction(e -> dialog.close());
+        
+        javafx.scene.layout.VBox layout = new javafx.scene.layout.VBox(10, label, closeButton);
+        layout.setAlignment(javafx.geometry.Pos.CENTER);
+        layout.setPadding(new javafx.geometry.Insets(20));
+        
+        Scene scene = new Scene(layout, 400, 200);
+        dialog.setScene(scene);
+        dialog.showAndWait();
     }
 
     public static void main(String[] args) {
     	
         launch(args);
     }
-
-
-
 }
