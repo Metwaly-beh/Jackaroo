@@ -1,7 +1,7 @@
 package engine.board;
 
 public class Cell {
-	private Marble marble;
+	private Marble marble; //cell class cant see marble class
 	private CellType cellType;
 	private boolean trap;
 	

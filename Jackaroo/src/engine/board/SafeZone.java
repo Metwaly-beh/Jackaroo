@@ -2,7 +2,16 @@ package engine.board;
 
 public class SafeZone {
 	
-		Colour colour;
-		ArrayList<Cell> cells;
+		private final Colour colour; //safezone class cant see colour enum
+		private ArrayList<Cell> cells; //needs more explanation
+		
+		
+		public SafeZone(Colour colour) {
+			super();
+			this.colour = colour;
+			//how to create an array of 4 SAFE cells?
+		}
+		
+		
 
 }
