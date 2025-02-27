@@ -1,8 +1,8 @@
 package model.player;
 
-public class Marble {
+public class Marble extends Colour{
 
-	final private Colour colour; //marble class cant see colour enum?
+	Colour colour; //marble class cant see colour enum?
 
 	public Marble(Colour colour) {
 		super();
