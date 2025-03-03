@@ -1,5 +1,7 @@
 package engine.board;
 
+import model.player.Marble;
+
 public class Cell {
 	 Marble marble; //cell class cant see marble class
 	 CellType cellType;

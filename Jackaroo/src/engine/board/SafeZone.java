@@ -1,5 +1,9 @@
 package engine.board;
 
+import java.util.ArrayList;
+
+import model.Colour;
+
 public class SafeZone {
 	
 		private final Colour colour; //safezone class cant see colour enum

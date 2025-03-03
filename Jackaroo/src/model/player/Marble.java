@@ -1,6 +1,8 @@
 package model.player;
 
-public class Marble extends Colour{
+import model.Colour;
+
+public class Marble {
 
 	Colour colour; //marble class cant see colour enum?
 
