@@ -3,9 +3,9 @@ package engine.board;
 import model.player.Marble;
 
 public class Cell {
-	 Marble marble; //cell class cant see marble class
+	 Marble marble; //cell class cant see marble class #fixed
 	 CellType cellType;
-	private boolean trap;
+	 boolean trap;
 	
 	
 	
