@@ -6,8 +6,8 @@ import model.Colour;
 
 public class SafeZone {
 	
-		 Colour colour; //safezone class cant see colour enum #fixed
-		 ArrayList<Cell> cells; //needs more explanation #fixed
+		 Colour colour;
+		 ArrayList<Cell> cells; 
 		 
 		 
 		 
@@ -15,7 +15,7 @@ public class SafeZone {
 		public SafeZone(Colour colour) {
 			super();
 			this.colour = colour;
-			//ArrayList<cells> = 4;  #error how to do this?
+			cells= new ArrayList<Cell>(4);
 		}
 		
 		
