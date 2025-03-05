@@ -4,8 +4,7 @@ import model.Colour;
 
 public class Marble {
 
-	Colour colour; //marble class cant see colour enum? #fixed
-
+	Colour colour; 
 	public Marble(Colour colour) {
 		super();
 		this.colour = colour;
