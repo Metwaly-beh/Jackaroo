@@ -4,10 +4,15 @@ import model.Colour;
 
 public class Marble {
 
-	Colour colour; 
+	private final Colour colour; 
+	
 	public Marble(Colour colour) {
 		super();
 		this.colour = colour;
+	}
+
+	public Colour getColour() {
+		return colour;
 	}
 	
 	

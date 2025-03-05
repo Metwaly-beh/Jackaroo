@@ -7,15 +7,63 @@ import model.card.Card;
 
 public class Player {
 	
-	String name;
-	Colour colour;
-	ArrayList<Card> hand;
-	ArrayList<Marble> marbles;
-	Card selectedCard;
-	ArrayList<Marble> selectedMarbles;
+	private final String name;
+	private final Colour colour;
+	private ArrayList<Card> hand;
+	private final ArrayList<Marble> marbles;
+	private Card selectedCard;
+	private final ArrayList<Marble> selectedMarbles;
 	
 	
 	
+	public ArrayList<Card> getHand() {
+		return hand;
+	}
+
+
+
+	public void setHand(ArrayList<Card> hand) {
+		this.hand = hand;
+	}
+
+
+
+	public Card getSelectedCard() {
+		return selectedCard;
+	}
+
+
+
+	public void setSelectedCard(Card selectedCard) {
+		this.selectedCard = selectedCard;
+	}
+
+
+
+	public String getName() {
+		return name;
+	}
+
+
+
+	public Colour getColour() {
+		return colour;
+	}
+
+
+
+	public ArrayList<Marble> getMarbles() {
+		return marbles;
+	}
+
+
+
+	public ArrayList<Marble> getSelectedMarbles() {
+		return selectedMarbles;
+	}
+
+
+
 	public Player(String name, Colour colour) {
 		super();
 		this.name = name;
