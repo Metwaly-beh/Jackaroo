@@ -19,8 +19,8 @@ public class Standard extends Card{
 	}
 
 
-	public Standard(String name, String description, BoardManager boardManager,
-			GameManager gameManager, int rank, Suit suit) {
+	public Standard(String name, String description, int rank, Suit suit, BoardManager boardManager,
+			GameManager gameManager) {
 		super(name, description, boardManager, gameManager);
 		this.rank = rank;
 		this.suit = suit;

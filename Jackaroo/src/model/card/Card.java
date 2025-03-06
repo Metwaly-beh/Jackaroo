@@ -9,6 +9,17 @@ public abstract class Card{
 	protected BoardManager boardManager;
 	protected GameManager gameManager;
 	
+
+	
+	public Card(String name, String description, BoardManager boardManager,
+			GameManager gameManager) {
+		super();
+		this.name = name;
+		this.description = description;
+		this.boardManager = boardManager;
+		this.gameManager = gameManager;
+	}
+	
 	
 	public String getName() {
 		return name;
@@ -21,17 +32,6 @@ public abstract class Card{
 
 
 
-	
-	
-	public Card(String name, String description, BoardManager boardManager,
-			GameManager gameManager) {
-		super();
-		this.name = name;
-		this.description = description;
-		this.boardManager = boardManager;
-		this.gameManager = gameManager;
-	}
-	
 	
 
 }

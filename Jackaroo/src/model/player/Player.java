@@ -34,11 +34,6 @@ public class Player {
 
 
 
-	public void setSelectedCard(Card selectedCard) {
-		this.selectedCard = selectedCard;
-	}
-
-
 
 	public String getName() {
 		return name;
@@ -58,14 +53,10 @@ public class Player {
 
 
 
-	public ArrayList<Marble> getSelectedMarbles() {
-		return selectedMarbles;
-	}
 
 
 
 	public Player(String name, Colour colour) {
-		super();
 		this.name = name;
 		this.colour = colour;
 		this.hand= new ArrayList<Card>();

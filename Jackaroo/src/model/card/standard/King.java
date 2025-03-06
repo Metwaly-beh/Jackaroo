@@ -5,9 +5,9 @@ import engine.board.BoardManager;
 
 public class King extends Standard{
 
-	public King(String name, String description, BoardManager boardManager,
-			GameManager gameManager, Suit suit) {
-		super(name, description, boardManager, gameManager, 13, suit);
+	public King(String name, String description, Suit suit, BoardManager boardManager,
+			GameManager gameManager) {
+		super(name, description, 13, suit, boardManager, gameManager);
 		// TODO Auto-generated constructor stub
 	}
 

@@ -30,7 +30,9 @@ public class SafeZone {
 			super();
 			this.colour = colour;
 			cells= new ArrayList<Cell>(4);
-		}
+			for(int i=0;i<4;i++){
+			cells.add(new Cell(CellType.SAFE));
+		}}
 		
 		
 
