@@ -1,88 +1,87 @@
 package model.card;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
-import model.card.standard.*;
-import model.card.wild.*;
 import engine.GameManager;
 import engine.board.BoardManager;
+import model.card.standard.Ace;
+import model.card.standard.Five;
+import model.card.standard.Four;
+import model.card.standard.Jack;
+import model.card.standard.King;
+import model.card.standard.Queen;
+import model.card.standard.Seven;
+import model.card.standard.Standard;
+import model.card.standard.Suit;
+import model.card.standard.Ten;
+import model.card.wild.Burner;
+import model.card.wild.Saver;
 
 public class Deck {
+    private static final String CARDS_FILE = "Cards.csv";
+    static private ArrayList<Card> cardsPool;
 
-    private final static String CARDS_FILE = "Cards.csv";
-    private static ArrayList<Card> cardsPool;
-
-    public static void loadCardPool(BoardManager boardManager, GameManager gameManager) throws IOException {
+    @SuppressWarnings("resource")
+	public static void loadCardPool(BoardManager boardManager, GameManager gameManager) throws IOException {
         cardsPool = new ArrayList<>();
-        BufferedReader br = null;
 
-        try {
-            br = new BufferedReader(new FileReader(CARDS_FILE));
-            String s;
+		BufferedReader br = new BufferedReader(new FileReader(CARDS_FILE));
 
-            while ((s = br.readLine()) != null) {
-                String[] w = s.split(",");
-                int cardCode = Integer.parseInt(w[0]);
-                int cardFrequency = Integer.parseInt(w[1]);
-                Card c = null;
+		while (br.ready()) {
+			String nextLine = br.readLine();
+			String[] data = nextLine.split(",");
+			
+			if (data.length == 0) 
+				throw new IOException(nextLine);
 
-                switch (cardCode) {
-                    case 14:
-                        c = new Burner(w[2], w[3], boardManager, gameManager);
-                        break;
-                    case 15:
-                        c = new Saver(w[2], w[3], boardManager, gameManager);
-                        break;
-                    case 1:
-                        c = new Ace(w[2], w[3], Suit.valueOf(w[5]), boardManager, gameManager);
-                        break;
-                    case 4:
-                        c = new Four(w[2], w[3], Suit.valueOf(w[5]), boardManager, gameManager);
-                        break;
-                    case 5:
-                        c = new Five(w[2], w[3], Suit.valueOf(w[5]), boardManager, gameManager);
-                        break;
-                    case 7:
-                        c = new Seven(w[2], w[3], Suit.valueOf(w[5]), boardManager, gameManager);
-                        break;
-                    case 10:
-                        c = new Ten(w[2], w[3], Suit.valueOf(w[5]), boardManager, gameManager);
-                        break;
-                    case 11:
-                        c = new Jack(w[2], w[3], Suit.valueOf(w[5]), boardManager, gameManager);
-                        break;
-                    case 12:
-                        c = new Queen(w[2], w[3], Suit.valueOf(w[5]), boardManager, gameManager);
-                        break;
-                    case 13:
-                        c = new King(w[2], w[3], Suit.valueOf(w[5]), boardManager, gameManager);
-                        break;
-                    default:
-                        int cardRank = Integer.parseInt(w[4]);
-                        c = new Standard(w[2], w[3], cardRank, Suit.valueOf(w[5]), boardManager, gameManager);
-                        break;
-                }
-                
-                for (int i = 0; i < cardFrequency; i++) {
-                    cardsPool.add(c);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (br != null) {
-                br.close();
-            }
+            String name = data[2];
+            String description = data[3];
+			
+			int code = Integer.parseInt(data[0]);
+			int frequency = Integer.parseInt(data[1]);
+			
+			for (int i = 0; i < frequency; i++) {
+				Card card;
+				
+				if(code > 13) 
+					switch(code) {
+						case 14: card = new Burner(name, description, boardManager, gameManager); break;
+						case 15: card = new Saver(name, description, boardManager, gameManager); break;
+						default: throw new IOException(nextLine);
+					}
+			
+				else {
+	                int rank = Integer.parseInt(data[4]);
+	                Suit cardSuit = Suit.valueOf(data[5]);
+					switch(code) {
+						case 0: card = new Standard(name, description, rank, cardSuit, boardManager, gameManager); break;
+						case 1: card = new Ace(name, description, cardSuit, boardManager, gameManager); break;
+						case 4: card = new Four(name, description, cardSuit, boardManager, gameManager); break;
+						case 5: card = new Five(name, description, cardSuit, boardManager, gameManager); break;
+						case 7: card = new Seven(name, description, cardSuit, boardManager, gameManager); break;
+						case 10: card = new Ten(name, description, cardSuit, boardManager, gameManager); break;
+						case 11: card = new Jack(name, description, cardSuit, boardManager, gameManager); break;
+						case 12: card = new Queen(name, description, cardSuit, boardManager, gameManager); break;
+						case 13: card = new King(name, description, cardSuit, boardManager, gameManager); break;
+						default: throw new IOException(nextLine);
+					}
+				}
+				
+				cardsPool.add(card);
+			}	
         }
     }
 
     public static ArrayList<Card> drawCards() {
         Collections.shuffle(cardsPool);
-        ArrayList<Card> drawnCards = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            drawnCards.add(cardsPool.remove(0));
-        }
-        return drawnCards;
+        ArrayList<Card> cards = new ArrayList<>(cardsPool.subList(0, 4));
+        cardsPool.subList(0, 4).clear();
+        return cards;
     }
+
 }
+

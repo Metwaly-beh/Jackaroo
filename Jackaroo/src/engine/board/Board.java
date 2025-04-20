@@ -1,92 +1,66 @@
 package engine.board;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-import model.Colour;
 import engine.GameManager;
+import model.Colour;
 
-public class Board implements BoardManager{
+@SuppressWarnings("unused")
+public class Board implements BoardManager {
+    private final ArrayList<Cell> track;
+    private final ArrayList<SafeZone> safeZones;
 	private final GameManager gameManager;
-	private final ArrayList<Cell> track;
-	private final ArrayList<SafeZone> safeZones;
-	private int splitDistance;
-	
-	public Board(ArrayList<Colour> colourOrder, GameManager gameManager){
-		this.gameManager=  	gameManager;
-		
-		track=new ArrayList<Cell>();
-		
-		safeZones= new ArrayList<SafeZone>();
-		
-		splitDistance=3;
-		for(int i=0;i<100;i++){
-			//first if it was base cell:
-			if(i==0||i==25||i==50||i==75){
-				track.add(new Cell(CellType.BASE));
-			}
-			//if it was safe zone entry:
-			else if(i==23||i==48||i==73||i==98){
-				track.add(new Cell(CellType.ENTRY));}
-			//else its just normal
-			else track.add(new Cell(CellType.NORMAL));
-		
-		}
-		
-		assignTrapCell();
-		safeZones.add(new SafeZone(colourOrder.get(0)));
-		safeZones.add(new SafeZone(colourOrder.get(1)));
-		safeZones.add(new SafeZone(colourOrder.get(2)));
-		safeZones.add(new SafeZone(colourOrder.get(3)));
-		}
-		
-		
-		
-	
-	private void assignTrapCell(){
-		for(int i=0;i<8;i++){
-			int	trapCellIndex= new Random().nextInt(99)+1;
-			/*the plus one here is because 
-			it is from 0-98*/
-			while(trapCellIndex==25||trapCellIndex==50||trapCellIndex==75||
-					(track.get(trapCellIndex)).isTrap()){
-				//make sure not base cell or trap cell already
-				trapCellIndex= new Random().nextInt(99)+1;}
-			Cell temp= new Cell(CellType.NORMAL);
-			temp.setTrap(true);
-		track.set(trapCellIndex,temp );
-		}
-	}
-	
-	
-	public int getSplitDistance() {
-		return splitDistance;
-	}
+    private int splitDistance;
 
+    public Board(ArrayList<Colour> colourOrder, GameManager gameManager) {
+        this.track = new ArrayList<>();
+        this.safeZones = new ArrayList<>();
+        this.gameManager = gameManager;
+        
+        for (int i = 0; i < 100; i++) {
+            this.track.add(new Cell(CellType.NORMAL));
+            
+            if (i % 25 == 0) 
+                this.track.get(i).setCellType(CellType.BASE);
+            
+            else if ((i+2) % 25 == 0) 
+                this.track.get(i).setCellType(CellType.ENTRY);
+        }
 
+        for(int i = 0; i < 8; i++)
+            this.assignTrapCell();
 
+        for (int i = 0; i < 4; i++)
+            this.safeZones.add(new SafeZone(colourOrder.get(i)));
 
-	public void setSplitDistance(int splitDistance) {
-		this.splitDistance = splitDistance;
-	}
+        splitDistance = 3;
+    }
 
+    public ArrayList<Cell> getTrack() {
+        return this.track;
+    }
 
+    public ArrayList<SafeZone> getSafeZones() {
+        return this.safeZones;
+    }
+    
+    @Override
+    public int getSplitDistance() {
+        return this.splitDistance;
+    }
 
-
-	public ArrayList<Cell> getTrack() {
-		return track;
-	}
-
-
-
-
-	public ArrayList<SafeZone> getSafeZones() {
-		return safeZones;
-	}
-
-
-
-
-	
-	
+    public void setSplitDistance(int splitDistance) {
+        this.splitDistance = splitDistance;
+    }
+   
+    private void assignTrapCell() {
+        int randIndex = -1;
+        
+        do
+            randIndex = (int)(Math.random() * 100); 
+        while(this.track.get(randIndex).getCellType() != CellType.NORMAL || this.track.get(randIndex).isTrap());
+        
+        this.track.get(randIndex).setTrap(true);
+    }
+    
 }
