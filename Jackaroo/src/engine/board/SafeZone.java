@@ -35,6 +35,13 @@ public class SafeZone {
 		}}
 		
 		
+		public boolean isFull(){
+			if(cells.get(0).getMarble()!=null)
+				return true;
+				return false;
+			
+		}
+		
 
 		
 		
