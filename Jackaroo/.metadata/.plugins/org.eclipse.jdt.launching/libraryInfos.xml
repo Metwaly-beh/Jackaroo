@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<libraryInfos>
+<libraryInfo home="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre" version="1.8.0_31">
+<bootpath>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\resources.jar"/>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\rt.jar"/>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\sunrsasign.jar"/>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\jsse.jar"/>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\jce.jar"/>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\charsets.jar"/>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\jfr.jar"/>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\ext"/>
+<entry path="C:\WINDOWS\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+<libraryInfo home="C:\Adham\study\csen401\Eclipse JavaFX\jdk" version="1.8.0_31">
+<bootpath>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\resources.jar"/>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\rt.jar"/>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\sunrsasign.jar"/>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\jsse.jar"/>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\jce.jar"/>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\charsets.jar"/>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\jfr.jar"/>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\ext"/>
+<entry path="C:\WINDOWS\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="C:\Adham\study\csen401\Eclipse JavaFX\jdk\jre\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+</libraryInfos>

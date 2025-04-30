@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="model.player.Marble"/>
+<fullyQualifiedTypeName name="exception.IllegalMovementException"/>
+<fullyQualifiedTypeName name="exception.IllegalDestroyException"/>
+<fullyQualifiedTypeName name="exception.IllegalSwapException"/>
+<fullyQualifiedTypeName name="exception.CannotFieldException"/>
+<fullyQualifiedTypeName name="exception.InvalidMarbleException"/>
+<fullyQualifiedTypeName name="java.lang.Math"/>
+<fullyQualifiedTypeName name="java.util.Random"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+</qualifiedTypeNameHistroy>

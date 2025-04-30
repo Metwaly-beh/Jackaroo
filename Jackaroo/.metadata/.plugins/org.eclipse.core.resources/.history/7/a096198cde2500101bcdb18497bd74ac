@@ -1,0 +1,134 @@
+package engine.board;
+
+import java.util.ArrayList;
+
+import engine.GameManager;
+import exception.IllegalMovementException;
+import model.Colour;
+import model.player.Marble;
+
+@SuppressWarnings("unused")
+public class Board implements BoardManager {
+    private final ArrayList<Cell> track;
+    private final ArrayList<SafeZone> safeZones;
+	private final GameManager gameManager;
+    private int splitDistance;
+
+    public ArrayList<Cell> getTrack() {
+        return this.track;
+    }
+
+    public ArrayList<SafeZone> getSafeZones() {
+        return this.safeZones;
+    }
+    
+    @Override
+    public int getSplitDistance() {
+        return this.splitDistance;
+    }
+
+    public void setSplitDistance(int splitDistance) {
+        this.splitDistance = splitDistance;
+    }
+    public Board(ArrayList<Colour> colourOrder, GameManager gameManager) {
+        this.track = new ArrayList<>();
+        this.safeZones = new ArrayList<>();
+        this.gameManager = gameManager;
+        
+        for (int i = 0; i < 100; i++) {
+            this.track.add(new Cell(CellType.NORMAL));
+            
+            if (i % 25 == 0) 
+                this.track.get(i).setCellType(CellType.BASE);
+            
+            else if ((i+2) % 25 == 0) 
+                this.track.get(i).setCellType(CellType.ENTRY);
+        }
+
+        for(int i = 0; i < 8; i++)
+            this.assignTrapCell();
+
+        for (int i = 0; i < 4; i++)
+            this.safeZones.add(new SafeZone(colourOrder.get(i)));
+
+        splitDistance = 3;
+    }
+
+    
+   
+    private void assignTrapCell() {
+        int randIndex = -1;
+        
+        do
+            randIndex = (int)(Math.random() * 100); 
+        while(this.track.get(randIndex).getCellType() != CellType.NORMAL || this.track.get(randIndex).isTrap());
+        
+        this.track.get(randIndex).setTrap(true);
+    }
+    
+    private ArrayList<Cell> getSafeZone(Colour colour){
+    	return (new ArrayList<Cell>(4));
+    }
+    private int getPositionInPath(ArrayList<Cell> path, Marble marble){
+    	return path.indexOf(marble);
+    	
+    }
+    private int getBasePosition(Colour colour){
+    if(safeZones.indexOf(colour)>0)
+    	return (safeZones.indexOf(colour)*25);
+    return -1;
+    
+    }
+    private int getEntryPosition(Colour colour){
+    		 switch(safeZones.indexOf(colour)){
+    		 case 0: return 98;
+    		 case 1: return 23;
+    		 case 2: return 48;
+    		 case 3: return 73;
+    		 default: return safeZones.indexOf(colour);
+    		 }
+    }
+    
+    private ArrayList<Cell> validateSteps(Marble marble, int steps) throws
+    IllegalMovementException{
+    	
+    	int i=getPositionInPath(track,marble);
+    	int j=getPositionInPath(getSafeZone(marble.getColour()),marble);
+    	ArrayList<Cell> validatedSteps= new ArrayList<Cell>(steps+1);
+    	int stepsNeededToEntry=getEntryPosition(marble.getColour())-i; 
+    	if(i==-1 && j==-1)
+    		throw new IllegalMovementException();
+    	    			
+    	if(i!=-1){
+    		
+    		if(stepsNeededToEntry<0)
+    			stepsNeededToEntry+=100;
+    		
+    		if(steps>stepsNeededToEntry){if(steps>(stepsNeededToEntry+4)){throw new IllegalMovementException();}
+    		else{for(int k=1;k<=stepsNeededToEntry;k++){
+    		validatedSteps.set(0,track.get(i+k));
+    		}
+    		   ArrayList<Cell> safeZoneCells=getSafeZone(marble.getColour());
+    		   validatedSteps.set(0)
+    		for(int k=1;k<4;k++){
+    			validatedSteps.set(k,safeZoneCells.get(k-stepsNeededToEntry));
+    		}}}
+    		else{for(int k=0;k<=stepsNeededToEntry;k++){
+        		validatedSteps.set(0,track.get(i+k));
+        		}}
+    		
+    		
+    	}
+    	else{
+    		if(steps>=4)
+    			throw new IllegalMovementException();
+    		
+    		ArrayList<Cell> safeZoneCells=getSafeZone(marble.getColour());
+		for(int k=1;k<=4;k++){
+			validatedSteps.set(k,safeZoneCells.get(k-stepsNeededToEntry));}
+    	}
+    	return validatedSteps;}
+   
+    	
+    
+}
