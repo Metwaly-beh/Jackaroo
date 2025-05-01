@@ -63,6 +63,7 @@ public class Player {
 
     public Marble getOneMarble(){
     	for(int i=0;i<marbles.size();i++)
+    		if(marbles.get(i)!=null)
     		return marbles.get(i);
     	return null;
     }
@@ -93,8 +94,8 @@ public class Player {
     public void play() throws GameException{
     	if(selectedCard==null)
     		throw new InvalidCardException();
-    	else if(selectedCard.validateMarbleColours(selectedMarbles)==false)
-    		throw new InvalidMarbleException();
+    	else if(selectedCard.validateMarbleColours(selectedMarbles)==false || selectedCard.validateMarbleColours(selectedMarbles)==false)
+    		throw new InvalidMarbleException("Invalid Marble");
     	else
     		selectedCard.act(selectedMarbles);
     }

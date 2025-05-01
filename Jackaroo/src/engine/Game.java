@@ -69,6 +69,8 @@ public class Game implements GameManager {
         return firePit;
     }
     void selectCard(Card card) throws InvalidCardException{
+    	if(card.validateMarbleColours(players.get(currentPlayerIndex).getMarbles())==false)
+    		throw new InvalidCardException("Invalid Card");
     	players.get(currentPlayerIndex).selectCard(card);
     }
     void selectMarble(Marble marble) throws InvalidMarbleException{
@@ -92,39 +94,28 @@ public class Game implements GameManager {
     	players.get(currentPlayerIndex).play();
     }
     void endPlayerTurn(){
-    	Player currentPlayer= players.get(currentPlayerIndex);
-    	Card selectedCard = currentPlayer.getSelectedCard();
-    	if(selectedCard!=null){
-    		firePit.add(selectedCard);
-    	}
-    	currentPlayer.deselectAll();
-    	currentPlayerIndex=currentPlayerIndex  + 1;
-    	if(currentPlayerIndex==0){
+    	Player p=players.get(currentPlayerIndex);
+    	firePit.add(p.getSelectedCard());
+    	p.getHand().remove(p.getSelectedCard());
+    	p.deselectAll();
+    	currentPlayerIndex++;
+    	if(currentPlayerIndex==4){
+    		currentPlayerIndex=0;
     		turn++;
+    		if(turn>=4){
+    			turn=0;
+    			for(int i=0;i<players.size();i++){
+    				if(Deck.getPoolSize()<4){
+    					Deck.refillPool(firePit);
+    					firePit.clear();
+    					
+    				}
+    					ArrayList<Card>newcards=Deck.drawCards();
+    					players.get(i).setHand(newcards);
+    				}
+    			
+    		}
     	}
-    	if(turn>4){
-    		turn=1;
-    	}
-    	for (int i = 0; i < players.size(); i++) {
-    	    Player player = players.get(i);
-    	    int cardsNeeded = 4 - player.getHand().size();
-    	    if (cardsNeeded > 0 && Deck.getPoolSize() > 0) {
-    	        ArrayList<Card> drawn = Deck.drawCards();
-    	        int cardsToAdd = cardsNeeded;
-    	        if (drawn.size() < cardsNeeded) {
-    	            cardsToAdd = drawn.size();
-    	        }
-
-    	        for (int j = 0; j < cardsToAdd; j++) {
-    	            player.getHand().add(drawn.get(j));
-    	        }
-    	    }
-    	}
-    	if(Deck.getPoolSize()<4){
-    		Deck.refillPool(firePit);
-    		firePit.clear();
-    	}
-    	
     }
     public Colour checkWin() {
         for (int i = 0; i < players.size(); i++) {

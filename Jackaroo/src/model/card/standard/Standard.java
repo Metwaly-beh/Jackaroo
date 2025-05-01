@@ -27,6 +27,7 @@ public class Standard extends Card {
         return suit;
     }
     
+   
     public void act(ArrayList<Marble> marbles) throws ActionException,
     InvalidMarbleException{
     	if(validateMarbleColours(marbles)==true)
