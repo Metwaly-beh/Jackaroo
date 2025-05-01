@@ -1,12 +1,15 @@
 package engine;
 
 import engine.GameManager;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
+
 import engine.board.Board;
+import engine.board.SafeZone;
 import exception.CannotDiscardException;
 import exception.CannotFieldException;
 import exception.GameException;
@@ -125,23 +128,11 @@ public class Game implements GameManager {
     }
     public Colour checkWin() {
         for (int i = 0; i < players.size(); i++) {
-            Player player = players.get(i);
-            ArrayList<engine.board.Cell> safeZone = board.getSafeZone(player.getColour());
-            int marblesInSafeZone = 0;
-
-            for (int j = 0; j < safeZone.size(); j++) {
-                engine.board.Cell cell = safeZone.get(j);
-                Marble marble = cell.getMarble();
-
-                if (marble != null && marble.getColour() == player.getColour()) {
-                    marblesInSafeZone++;
+            SafeZone safeZone = board.getSafeZones().get(i);
+            if (safeZone.isFull()==true) {
+                    return  safeZone.getColour();
                 }
             }
-
-            if (marblesInSafeZone == 4) {
-                return player.getColour();
-            }
-        }
         return null;
     }
     public void sendHome(Marble marble) {
@@ -161,7 +152,7 @@ public class Game implements GameManager {
             throw new CannotFieldException("No marbles available to field.");
         }
 
-        sendHome(marble); 
+        board.sendToBase(marble); 
        players.get(currentPlayerIndex).getMarbles().remove(marble); 
     }
    
