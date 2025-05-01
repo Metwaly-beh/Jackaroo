@@ -39,7 +39,7 @@ public class Seven extends Standard {
     		boardManager.moveBy(marbles.get(1),7-boardManager.getSplitDistance(),false);
     	}
     	else
-    		throw new InvalidMarbleException();
+    		throw new InvalidMarbleException("Invalid Marble");
     		}
 
 }

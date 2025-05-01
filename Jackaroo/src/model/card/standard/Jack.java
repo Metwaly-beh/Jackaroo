@@ -39,7 +39,7 @@ public class Jack extends Standard {
     	else if(validateMarbleColours(marbles)==true)
     		boardManager.swap(marbles.get(0),marbles.get(1));
     	else
-    		throw new InvalidMarbleException();
+    		throw new InvalidMarbleException("Invalid Marble");
     		}
 
 }

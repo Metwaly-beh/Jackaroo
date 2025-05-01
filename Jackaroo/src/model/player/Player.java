@@ -59,6 +59,7 @@ public class Player {
     
     public void regainMarble(Marble marble){
     	this.marbles.add(marble);
+    	
     }
 
     public Marble getOneMarble(){
@@ -69,21 +70,21 @@ public class Player {
     }
     
     public void selectCard(Card card) throws InvalidCardException {
-    	for(int i=0;i<hand.size();i++)
-    		if(this.hand.get(i)==card){
+    	for(Card x: hand)
+    		if(x==card){
     			this.selectedCard=card;
     			break;
     		}
     	if(this.selectedCard!=card)
-    		throw new InvalidCardException();
+    		throw new InvalidCardException("Card Invalid");
     }
     
     public void selectMarble(Marble marble) throws InvalidMarbleException {
-    	selectedMarbles.add(marble);
-    	if(selectedCard.validateMarbleColours(selectedMarbles)==false){
-    		throw new InvalidMarbleException();
+    	if (this.selectedMarbles.size() >= 2) 
+    		throw new InvalidMarbleException("Cannot select more than two marbles.");
+      	 else if (!(selectedMarbles.contains(marble))) this.selectedMarbles.add(marble);
     	}
-    			}
+    		
     
     public void deselectAll(){
         this.selectedCard = null;
@@ -92,8 +93,8 @@ public class Player {
     
     
     public void play() throws GameException{
-    	if(selectedCard==null)
-    		throw new InvalidCardException();
+    	if(selectedCard.validateMarbleSize(selectedMarbles)==false || selectedCard.validateMarbleColours(selectedMarbles)==false)
+    		throw new InvalidMarbleException("Invalid Marble");
     	else if(selectedCard.validateMarbleColours(selectedMarbles)==false || selectedCard.validateMarbleColours(selectedMarbles)==false)
     		throw new InvalidMarbleException("Invalid Marble");
     	else

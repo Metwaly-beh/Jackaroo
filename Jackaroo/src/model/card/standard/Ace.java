@@ -20,20 +20,14 @@ public class Ace extends Standard {
     	return false;
     }
     
-    public boolean validateMarbleColours(ArrayList<Marble> marbles){
-    	if(marbles.size()==0)
-    	    return true;
-    	if(marbles.get(0).getColour()==gameManager.getActivePlayerColour())
-    		return validateMarbleSize(marbles);
-    	return false;
-    }
-    
     public void act(ArrayList<Marble> marbles) throws ActionException,
     InvalidMarbleException{
     	if(marbles.size()==1)
-        		super.act(marbles);
+    		super.act(marbles);
     	else if(marbles.size()==0)
         		gameManager.fieldMarble();
+    	else
+    		throw new InvalidMarbleException("Invalid Marble");
     		}
 
 }

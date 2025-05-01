@@ -16,10 +16,10 @@ public class Four  extends Standard {
     
     public void act(ArrayList<Marble> marbles) throws ActionException,
     InvalidMarbleException{
-    	if(validateMarbleColours(marbles)==true)
+    	if(super.validateMarbleColours(marbles)==true)
     		boardManager.moveBy(marbles.get(0),-4,false);
     	else
-    		throw new InvalidMarbleException();
+    		throw new InvalidMarbleException("Invalid Marble");
     }
     	}
 

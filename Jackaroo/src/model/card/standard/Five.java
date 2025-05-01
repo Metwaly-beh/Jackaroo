@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import model.player.Marble;
 import engine.GameManager;
 import engine.board.BoardManager;
+import exception.ActionException;
+import exception.InvalidMarbleException;
 
 public class Five extends Standard {
 
@@ -13,9 +15,14 @@ public class Five extends Standard {
     }
     
     public boolean validateMarbleColours(ArrayList<Marble> marbles){
-    	if(marbles.get(0).getColour()!=gameManager.getActivePlayerColour())
-    		return validateMarbleSize(marbles);
-    	return false;
+    	return true;
+    }
+    public void act(ArrayList<Marble> marbles) throws ActionException,
+    InvalidMarbleException{
+    	if(validateMarbleColours(marbles)==true)
+    		super.act(marbles);
+    	else
+    		throw new InvalidMarbleException("Invalid Marble");
     }
 
 }

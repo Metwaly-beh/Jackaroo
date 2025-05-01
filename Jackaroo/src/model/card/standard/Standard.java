@@ -27,12 +27,11 @@ public class Standard extends Card {
         return suit;
     }
     
-   
     public void act(ArrayList<Marble> marbles) throws ActionException,
     InvalidMarbleException{
-    	if(validateMarbleColours(marbles)==true)
+    	if(super.validateMarbleColours(marbles)==true)
     		boardManager.moveBy(marbles.get(0),this.rank,false);
     	else
-    		throw new InvalidMarbleException();
+    		throw new InvalidMarbleException("Invalid Marble");
     }
 }
